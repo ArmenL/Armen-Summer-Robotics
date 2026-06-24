@@ -28,6 +28,11 @@
                 document.getElementById("connection_status").textContent = "Connected";
         } catch (error) {
                 document.getElementById("connection_status").textContent = "Disconnected";
+                document.getElementById("battery_v").textContent = "--";
+                document.getElementById("left_ticks").textContent = "--";
+                document.getElementById("right_ticks").textContent = "--";
+                document.getElementById("tof_mm").textContent = "--";
+                document.getElementById("estop").textContent = "--";
         }
     }
         setInterval(updateTelemetry, 1000);
