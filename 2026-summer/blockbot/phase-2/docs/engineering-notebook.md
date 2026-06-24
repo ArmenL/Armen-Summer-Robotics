@@ -1,14 +1,16 @@
 # Phase 2 Engineering Notebook
 
 ## Date
-**Date:** 2026-06-23
+**Date:** 2026-06-24
 **Phase:** 2 — First Web Server
 
 ---
 
 ## What I built
-A small web server that has 3 pages, including: /, /telemetry, and /extra.
-Each page displays a fake JSON message.
+A web server that has 3 pages, including: /, /telemetry, and /extra.
+"/" displays HTML including fake telemetry data from app.py and a 
+connection state indicator.
+
 
 ---
 
@@ -59,13 +61,31 @@ waiting behind the web port to accept it. So, I use 0.0.0.0, which means "talk t
 
 ---
 
+### Failure 5:
+**Expected:** Function "get_home()" to have Correct Syntax
+**What happened:** Python was very, very confused.
+**Cause:** The "with open()" was inside of the parameters' parentheses!
+**Fix:** Moving "with open()" from the parameters' parentheses to the body of "get_home()."
+**Lesson:** Don't put code where the parameters are supposed to go.
+
+---
+
+### Failure 6:
+**Expected:** Index.html to Show Disconnected when I Stopped Uvicorn from Updating
+**What happened:** Kept loading forever.
+**Cause:** No timeout for the javascript's searching for app.py
+**Fix:** Adding AbortController to javascript
+**Lesson:** If you don't include a timeout, it will keep searching forever until it finds what it is looking for.
+
+---
+
 ## One thing that confused me at first but makes sense now
-How to create a super simple web app that displays JSON.
+How to use the AbortController in the javascript section of index.html
 
 ---
 
 ## One thing I'm still fuzzy on
-What does all of that bash really mean and how to read and write it.
+I don't know.
 
 ---
 
@@ -74,8 +94,8 @@ What does all of that bash really mean and how to read and write it.
  - [x] Fake telemetry endpoint working at /telemetry
  - [x] Home route working at /
  - [x] Code committed and pushed to GitHub
- - [ ] The HTML dashboard page at / that displays and updates telemetry
- - [ ] Connection state indicator
+ - [x] The HTML dashboard page at / that displays and updates telemetry
+ - [x] Connection state indicator
  - [ ] Real Phase 1 Pico data replacing fake data
 
 ---
