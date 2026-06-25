@@ -6,11 +6,8 @@
     <body>
         <p>Connection Status: <span id="connection_status">--</span></p>
         <h1>Welcome to the BlockBot Dashboard</h1>
-        <p>Battery Voltage: <span id="battery_v">--</span></p>
-        <p>Left Ticks: <span id="left_ticks">--</span></p>
-        <p>Right Ticks: <span id="right_ticks">--</span></p>
-        <p>TOF Distance: <span id="tof_mm">--</span></p>
-        <p>E-Stop: <span id="estop">--</span></p>
+        <p>Key Pressed: <span id="key">--</span></p>
+        <p>Ticks: <span id="ticks">--</span></p>
 
     <script>
         async function updateTelemetry() {
@@ -20,19 +17,13 @@
                 const response = await fetch("/telemetry", { signal: controller.signal });
                 const data = await response.json();
 
-                document.getElementById("battery_v").textContent = data.battery_v;
-                document.getElementById("left_ticks").textContent = data.left_ticks;
-                document.getElementById("right_ticks").textContent = data.right_ticks;
-                document.getElementById("tof_mm").textContent = data.tof_mm;
-                document.getElementById("estop").textContent = data.estop;
+                document.getElementById("key").textContent = data.key;
+                document.getElementById("ticks").textContent = data.ticks;
                 document.getElementById("connection_status").textContent = "Connected";
         } catch (error) {
                 document.getElementById("connection_status").textContent = "Disconnected";
-                document.getElementById("battery_v").textContent = "--";
-                document.getElementById("left_ticks").textContent = "--";
-                document.getElementById("right_ticks").textContent = "--";
-                document.getElementById("tof_mm").textContent = "--";
-                document.getElementById("estop").textContent = "--";
+                document.getElementById("key").textContent = "--";
+                document.getElementById("ticks").textContent = "--";
         }
     }
         setInterval(updateTelemetry, 1000);
