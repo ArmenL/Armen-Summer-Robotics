@@ -5,7 +5,7 @@ import fastapi
 from fastapi.responses import HTMLResponse
 app = fastapi.FastAPI(title="Pi Serial API")
 
-PORT = "/dev/ttyACM0"
+PORT = "/dev/ttyAMC0"
 BAUD = 115200
 
 ser = serial.Serial(PORT, BAUD, timeout=0.1)

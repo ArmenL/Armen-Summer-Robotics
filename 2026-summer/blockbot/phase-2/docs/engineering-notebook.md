@@ -1,14 +1,14 @@
 # Phase 2 Engineering Notebook
 
 ## Date
-**Date:** 2026-06-24
+**Date:** 2026-06-25
 **Phase:** 2 — First Web Server
 
 ---
 
 ## What I built
 A web server that has 3 pages, including: /, /telemetry, and /extra.
-"/" displays HTML including fake telemetry data from app.py and a 
+"/" displays HTML including real updating telemetry data from phase 1 setup and a 
 connection state indicator.
 
 
@@ -79,13 +79,30 @@ waiting behind the web port to accept it. So, I use 0.0.0.0, which means "talk t
 
 ---
 
-## One thing that confused me at first but makes sense now
-How to use the AbortController in the javascript section of index.html
+### Failure 7:
+**Expected:** Everything to Work when I Tested it
+**What happened:** Kept loading forever.
+**Cause:** Programs and extenstions were fighting over the port.
+**Fix:** Disconnecting MicroPico so the programs could have the port.
+**Lesson:** Make sure nothing is hogging the port when you run a program.
 
 ---
 
+### Failure 8:
+**Expected:** No Errors When I Ran the Program the First Time
+**What happened:** An error popped up.
+**Cause:** I misspelled "ttyACM0" as "ttyAMC0"
+**Fix:** Typing it correctly.
+**Lesson:** Don't make typos.
+
+---
+
+## One thing that confused me at first but makes sense now
+How threading works.
+---
+
 ## One thing I'm still fuzzy on
-I don't know.
+How main.py and all of those phase 1 files work.
 
 ---
 
@@ -96,6 +113,6 @@ I don't know.
  - [x] Code committed and pushed to GitHub
  - [x] The HTML dashboard page at / that displays and updates telemetry
  - [x] Connection state indicator
- - [ ] Real Phase 1 Pico data replacing fake data
+ - [x] Real Phase 1 Pico data replacing fake data
 
 ---
