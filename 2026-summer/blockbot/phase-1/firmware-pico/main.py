@@ -43,7 +43,7 @@ def send_json(obj):
     sys.stdout.write(ujson.dumps(obj) + "\n")
 
 def recv_json():
-    if select.select([sys.stdin], [], [], 0)[0]:
+    if select.select([sys.stdin], [], [], 0)[0]: #type: ignore[no-untyped-call]
         try:
             line = sys.stdin.readline().strip()
             if line:

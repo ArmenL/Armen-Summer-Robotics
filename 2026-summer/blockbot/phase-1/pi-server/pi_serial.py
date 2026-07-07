@@ -1,4 +1,4 @@
-import serial
+import serial # type: ignore[import]
 import json
 import time
 import threading

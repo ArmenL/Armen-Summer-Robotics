@@ -12,3 +12,12 @@
 
 > ⚠️ Phase 4 note: encoder signals from #3543 are 5V. 
 > Pico GPIO is 3.3V max. Will need a level shifter.
+
+### Motors → #3543
+| Motor | Board Pin |
+|-------|-----------|
+| Left motor + | ML+ |
+| Left motor - | ML- |
+| Right motor + | MR+ |
+| Right motor - | MR- |
+
