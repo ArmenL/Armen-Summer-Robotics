@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>BlockBot Dashboard</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+        }
+
+        #joystick-zone {
+            width: 400px;
+            height: 400px;
+            border-radius: 50%;
+            position: relative;
+            margin-top: 25px;
+            margin-left: 10%;
+            
+            background: conic-gradient(from 0deg, #33333b, #55555f, #777785, #55555f, #33333b, #55555f, #777785, #55555f, #33333b);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+
+            box-shadow:
+                0 8px 16px rgba(0, 0, 0, 0.15),
+                inset 0 4px 6px rgba(255, 255, 255, 0.2),
+                inset 0 -4px 6px rgba(0, 0, 0, 0.4),
+                inset 0 15px 40px rgba(0, 0, 0, 0.85);
+        }
+
+        #joystick-zone::before {
+            content: '';
+            position: absolute;
+            top: 15px; left: 15px; right: 15px; bottom: 15px;
+            border-radius: 50%;
+            background: radial-gradient(circle at 50% 10%, #1a1a24 0%, #0a0a0f 80%);
+            box-shadow: inset 0 10px 20px rgba(0,0,0,0.9);
+            z-index: 0;
+        }
+
+        #joystick-thumb {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            position:absolute;
+            cursor: grab;
+            z-index: 1;
+            background: radial-gradient(circle at 35% 30%, #ffffff 0%, #bcbcbc 8%, #555555 45%, #222224 85%, #0a0a0c 100%);
+            box-shadow: 
+                0 20px 35px rgba(0, 0, 0, 0.75),
+                0 5px 10px rgba(0, 0, 0, 0.4),
+                inset 0 4px 5px rgba(255, 255, 255, 0.6),
+                inset 0 -4px 5px rgba(0, 0, 0, 0.6);
+            will-change: transform, box-shadow;
+        }
+
+        #connection-status-css.container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            text-align: center;
+            top: 0.01%;
+            right: 0.01%;
+            position: fixed;
+            padding: 10px;
+            font-family: "Times New Roman";
+            background-color: rgb(7, 22, 109);
+            border-color: rgb(7, 200, 109);
+            border-top-width: 0px;
+            border-left-width: 5px;
+            border-right-width: 0px;
+            border-bottom-width: 5px;
+            border-bottom-left-radius: 10px;
+            border-bottom-right-radius: 0px;
+            border-top-left-radius: 0px;
+            border-top-right-radius: 0px;
+            height: 30px;
+            width: fit-content;
+            z-index: 1001;
+        }  
+
+        #header {
+            display: flex;
+            position: sticky;
+            top: 0;
+            justify-content: center;
+            font-size: 50px;
+            font-weight: 400;
+            font-family: "Bangers", system-ui;
+            font-style: normal;
+            text-decoration-color: rgb(6, 18, 88);
+            z-index: 1000;
+        }
+
+        #header p {
+            margin: 0;
+            padding: 10px 0;
+        }
+
+        #status {
+            position: fixed;
+            top: 29%;
+            right: 50%;
+            transform: translate(50%, 50%);
+            background-color: rgb(7, 22, 109);
+            padding: 10px;
+            border-radius: 5px;
+        }
+
+        #estop {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            top: 33%;
+            right: 25%;
+            transform: translate(50%, -50%);
+            background-color: rgb(200, 20, 20);
+            padding: 10px;
+            border-radius: 50%;
+            font-size: 60px;
+            font-weight: 400;
+            font-family: "Bangers", system-ui;
+            font-style: normal;
+            text-decoration-color: rgb(6, 18, 88);
+        }
+
+        #controls-hint {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            color:rgb(255, 250, 250);
+            bottom: -25px;
+            left: 0.01%;
+            position: fixed;
+            padding: 10px;
+            font-family: "Times New Roman";
+            background-color: rgb(7, 22, 109);
+            border-color: rgb(252, 98, 139);
+            border-top-width: 100px;
+            border-left-width: 0px;
+            border-right-width: 100px;
+            border-bottom-width: 0px;
+            border-bottom-left-radius: 0px;
+            border-bottom-right-radius: 0px;
+            border-top-left-radius: 0px;
+            border-top-right-radius: 10px;
+            height: 200px;
+            width: fit-content;
+            z-index: 1001;
+        }
+
+    </style>
+</head>
+<body>
+    <div id="header"><p>BlockBot Dashboard</p></div>
+    <div id="connection-status-css" class="container">
+        <p><span id="connection-status" style="color: rgb(86, 165, 245)">🔃 Loading</span></p>
+    </div>
+    <div id="joystick-zone">
+        <div id="joystick-thumb"></div>
+    </div>
+    <div id="status" style="color: rgb(86, 165, 245)">🔃 Loading</div>
+    <button id="estop">Press ONLY In Case of EMERGENCY</button>
+    <pre id="controls-hint">
+Only Mouse Controls:
+        Left click + drag on joystick = move joystick
+        Scroll click = emergency stop
+        Forward = drive
+        Back = park
+
+Keyboard and Mouse Controls:
+        Left click + drag on joystick = move joystick
+        Space key = emergency stop
+        D = drive
+        P = park
+    </pre>
+<script>
+    const thumb = document.getElementById("joystick-thumb")
+    const zone = document.getElementById("joystick-zone")
+    const connectionStatus = document.getElementById("connection-status")
+    let isdragging = false;
+    const maxRadius = zone.offsetWidth / 2 - thumb.offsetWidth / 2;
+    thumb.style.left = "125px"
+    thumb.style.top = "125px"
+
+    thumb.addEventListener("mousedown", function(e) {
+        isdragging = true;
+    });
+    zone.addEventListener("mousemove", function(e) {
+        if (isdragging === true) {
+            const rect = zone.getBoundingClientRect();
+            let x = e.clientX - rect.left - rect.width / 2;
+            let y = e.clientY - rect.top - rect.height / 2;
+            let distance = Math.sqrt(x*x + y*y);
+            
+            if (distance > maxRadius) {
+                x = (x / distance) * maxRadius;
+                y = (y / distance) * maxRadius;
+            }
+            
+            thumb.style.transform = `translate(${x}px, ${y}px)`;
+            const shadowX = -x * 0.35; 
+            const shadowY = 20 - (y * 0.35); 
+            const blurRadius = 35 + (distance * 0.1); 
+            const ambientShadowOpacity = 0.75 + (distance * 0.001);
+
+            thumb.style.boxShadow = `
+                ${shadowX}px ${shadowY}px ${blurRadius}px rgba(0, 0, 0, ${ambientShadowOpacity}),
+                ${shadowX * 0.5}px ${shadowY * 0.5}px 10px rgba(0, 0, 0, 0.4),
+                inset 0 4px 5px rgba(255, 255, 255, 0.6),
+                inset 0 -4px 5px rgba(0, 0, 0, 0.6)`;
+            translateSend(x, y)
+        }
+    });
+
+    zone.addEventListener("mouseup", function(e) {
+        isdragging = false;
+        thumb.style.transform = "translate(0, 0)";
+        thumb.style.boxShadow = ""; 
+    });
+
+    document.addEventListener("keydown", function(e) {
+        if (e.key == "ArrowUp") {
+            drive()
+        } else if (e.key == "ArrowDown") {
+            park()
+        } else if (e.key == "E") {
+            executeOrder66()
+        }
+    })
+
+    document.addEventListener("mousedown", function(e) {
+        if (e.button == 1) {
+            executeOrder66()
+        } else if (e.button == 4) {
+            drive()
+        } else if (e.button == 3) {
+            park()
+        }
+    })
+
+    let width = 100
+
+    async function translateSend(x, y) {
+        try {
+            let ML_Power = (y + x) / maxRadius * 512
+            let MR_Power = (y - x) / maxRadius * 512
+
+            const controller = new AbortController();
+            setTimeout(() => controller.abort(), 800);
+            const response = await fetch("/command", { method: "POST", signal: controller.signal, headers: { "Content-Type": "application/json" }, body: JSON.stringify({"ML_Power": ML_Power, "MR_Power": MR_Power}) });
+            const data = await response.json();
+        } catch (error) {
+            console.error("error.")
+        }
+    }
+
+    async function drive() {
+        try {
+            const controller = new AbortController();
+            setTimeout(() => controller.abort(), 800);
+            const response = await fetch("/command", { method: "POST", signal: controller.signal, headers: { "Content-Type": "application/json" }, body: JSON.stringify({"motor_status": 1}) });
+            const data = await response.json();
+        } catch (error) {
+            console.error("error")
+        }
+    }
+
+    async function park() {
+        try {
+            const controller = new AbortController();
+            setTimeout(() => controller.abort(), 800);
+            const response = await fetch("/command", { method: "POST", signal: controller.signal, headers: { "Content-Type": "application/json" }, body: JSON.stringify({"motor_status": 0}) });
+            const data = await response.json();
+        } catch (error) {
+            console.error("ERROR SENDING COMMAND. PERMISSION TO LAUNCH AIR STRIKE?")
+            console.error("3, 2, ...")
+            console.error("1")
+            console.error("crisis averted")
+        }
+    }
+
+    async function executeOrder66() {
+        try {
+            const controller = new AbortController();
+            setTimeout(() => controller.abort(), 800);
+            const response = await fetch("/command", { method: "POST", signal: controller.signal, headers: { "Content-Type": "application/json" }, body: JSON.stringify({"estop": 1}) });
+            const data = await response.json();
+        } catch (error) {
+            console.error("ERROR SENDING COMMAND. EXeCu«t♦E♣Orgba(100, 100, 100) ORDER 66?")
+            console.error("ÿ¾½¬")
+            console.error("penquining")
+            console.error("Crisis Averted")
+            console.error("[CRITICAL_ALERT] :: SECURITY_BREACH_DETECTED :: INTRUSION_PREVENT_BYPASST̸̳̯̤̓͌͝Ą̶͎̟͗̓̚R̴̛̖̪̈́̾͜G̵͕͉͙̐̎̕E̶͙̝͍͗̀̚T̶̛͕̠̱̃̓_̶̖̳͚̑͝͝Ŝ̶̨̮͇͋̀Ÿ̶̼̤̯́͝͝S̵͎̱̻̃̓͝T̶̠̬̑̅̚ͅE̶̞̱̝̐͐͊M̶̨̭̮̅̒̀_̶̡̝͚̓̈́͝C̶̢̲̳͐͊͋Ö̵̟͚͚́́͗M̶͇̰̼̿͆̕P̵͙͉͓͐̿̿R̶̛̙̺̪̊̕O̶͙̩͙̿͑̈́M̶͙̹̖̽̽̕I̵͖̠͈͑͊̔S̵̭͙̖̈́͊͊E̵̢͓̾̐͝ͅD̵̮̞͐́͘͜ 0x7FFF80A3BC12 >>> ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮[BUFF_OVRFLW] >>>  ÃºÂ¡ ÿ¾½¬ ¡¢£¤¥¦§¨©ª«¬®¯°±²³´µ¶·¸¹º»¼½¾¿ÀÁÂÃÄÅÆÇÈÉÊĖ̵̢̦̗̓̕X̶̟͉̹̾̕̚E̵̖̻̬̿̓̕C̵̛̪̦͎͗͊Ụ̶̝̖̅̄͘T̶̰̭͓̓̎͋Ĩ̷̱̦͓̓͝N̶͎̯̭͂͗̏G̶̡̝̪̅̅̒_̶̨̯̞͌͂̀R̷̨̳̞͌̍̾Ę̵͉̱̆̑͘M̶̧̫̤̉̈́͝O̵̪͇̠͐̎̕T̶̡̯̗͒̓́E̶͔̯͉̐̀͝_̶͙̫̞̉̄̍C̶̨̡̺̒̃̍Ō̷̪̯̬͑̿D̶̫̞́̐͌͜È̶͙̫̃͘͜_̶͇̪̭͆̈́͒I̶̡̥̠͑͂͘N̵͉̬̬̏̍͠J̶̱̯̺̔̓̚Ȇ̶͔̪̞̿͛Ċ̶̘͕̞̿͝Ṭ̷͉̝̔͌͊I̶̡̝̠̎͌̅O̶̡͚͇̿̀͝N̶̮̪̳͌́͝ 01100110 01100001 01110100 01100001 01101100 ÿ   þ   ý   ü   û   ú   ù   ø   ÷   ö   õ   ô   ó   ò   ñ   ð   ï   î   í   ì   ë   ê   é S̶̫̝̰̅͊̎Y̶̙̺͉͊̒̈́Ś̶̢͙̦̄͑T̶͙͇̂̅͗͜Ḙ̶̭̩̽͘͝M̶͙͚͈̑͂̊_̶͉̟͗̅̏͜Ḿ̶͙̫̙̚͝Ë̶̪̱͚́̈́͒M̶̡͖̺̑̕̕O̶̠̪͖͌̀̕R̶͉̗̒̃͜͝Y̶̲͉̠̅͑͗_̷͚̙̤̉̈́͝Ḏ̵̡̙͋̅͑Ų̷̬͓̽͗͝M̶̧̟̯͋̓̕Ṗ̷͖͇̠̂̾_̵̳̝̖̿̅̏I̷̫͙͕̎͂̕N̷̡̺͛̽͝ͅÌ̶͔̱̱̀͠T̷͚͙̘̓̅̚I̶̢̥͎͗̀͝Ą̶̥̗̽̌͒L̶̼͎͍̂̌̑I̸̜̬͍̊́̇Z̷̝̪̥̑̀̇E̵̙͕̤͗̂̅D̷̢͉̼̅̅͘ 0x00FF00FF00FF00FF >>> µµµµ¬¬¬¬««««   /dev/ttyUSB0::ROOT_SHELL_GRANTED::UID_0_BYPASS_SUCCESSFUL      ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ ⸮⸮⸮ Ḋ̸͇̳̫͐͝Ơ̶͚̱͖̐͝W̵̪̝͇͋̎̍N̶͓̖͛͒͂͜L̸̡̺̻̎̑͘Ō̶̱͇̑̚͜A̶̡͇͓̍̿̕Ḓ̶̡͍͌̕͠I̶̡̯͙͌̑̕Ń̶͖̻͕̾̚Ĝ̶̫̺̰͋̓_̶̣͉̙̓̌̄S̷̠̪͙̿͛͒A̶̰̝͓͋̓͝M̶͕̫̤̓̀̕_̶͉̠̗̏̂͒D̷͚̳͍͌̍͋A̵̰̘̟͋́͋T̷̯̰͖̒̿͘Â̵͚͙͙͂̈́B̷̥̫̤̍̕̕Ä̸̯̭͇́͝͝S̶̟̮̲̃̊̒E̶̯͙̫͒̈́̈́_̷̨̙̥͂͑̕T̶̡̪̘̀̍͘O̶̺̼͚̒̀͝_̷̢͙̬͗̐͘Ẻ̵̡͕̫͒̃X̵̩͙̤͗̐̾Ť̸͔̝͚̐̕Ẻ̶̟̩͕̊͠R̴̝̩̞̀͘͘N̶̨̛̲̅͜͝A̶͎̺͒̏͒͜L̶̢̩̱̉͛̽_̴̞̰͉͗̓͠I̶̭̼͕͆̕̕Ṕ̶̧̯̐̕͜ 10101010 11110000 00001111   Þßàáâãäåæçèéêëìíîïðñòóôõö  ¥¦§¨©ª  »»»»»»  «««««« ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîï ÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿÿḰ̷͕̯̠͌̀E̸͖̤͙̽̿͌Ŷ̷̺̬͕̈́̒L̷̡̠̪̏̚͝Ȯ̶̥̹͇̓͌G̷̲̘̲͗̍̓G̶̫̲̪̏̍̀É̸͔̫͎͆͝R̷̰̭̙̀̈́̊_̵̡̣̣͌͒̃A̶̰̝͎̐̊̑Ç̸̢̠̿́̕T̷͙̪͙͌̓͝I̶͈̞̺̊̅̐V̴̝̪͍̆͑̅Å̸̳͓͍̈́͘T̴̙̙̟̂͊͂E̷̝͙͕̒͌͑D̷̨͚̪̿̉̀_̷̰͉̳̃̽͗B̴͈͙̬͂̈̃Ȧ̷̡̝̯̓͑C̸̡̞͕͆͠͝K̷̩̤͍̓̀̇D̵̜̲͈̓̅̎Ǫ̵̥̯̔̀͘O̴͙̙̳̾͌͘Ȓ̷̦͙̱͂̒_̶̲͓̉̐̚͜L̷̙̞̼̐̀̚I̴̯̫̰̊̏͘S̸̟̪͈͋̿͘T̵̡̟̤̔͐́Ę̵͙͌̈́̃ͅN̷̡̯̯̄̃̈́I̸͎͍̿̾͝ͅŅ̷̲̝̊͛̒G̶̻̳͚̉̾͝ [MALWARE_PERSISTENCE_ESTABLISHED]    ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ⸮ ×ØÙÚÛÜÝÞßàáâãäåæçèéêëìíîï   œžŸ¡¢£¤¥  Š‹ŒŽ  €‚ƒ„…†‡ˆ‰ 00000000 11111111F̵̪̱͓̈́̊̕I̶̟̼̟͋̿̾R̶̮̟͚̅͋̽Ȇ̵̢̮̙̒̓W̶̱̦͍͆̃͑Ȁ̶̫̳̀͘͜L̶̞̣̝̋͐̊L̶̡̟͎̃͐́_̶̢͕̪͑̿͝Ṱ̵͔̳̇̾͗E̷͕̠̗̅̀͝R̶̟͚̺̽̇͝M̶͙̹̖̀͋̎I̵̡͎͚̍͌̒Ņ̷̲̝̊͛̒A̶͎̺͒̏͒͜Ť̶͔̝͚̐̕Ẻ̶̟̩͕̊͠D̶̝͙͕̔̓͠_̵̳̰͓̈́̔͝P̵̡̖̫̿̔̕Å̴̱̺̝͝͝C̵̭̱̙̾͛͝K̷̩̤͍̓̀̇E̶͕̝͉̾̾͘Ṭ̶̺̙̿̾̂_̶̛̯̖͉̅̊D̵̜̲͈̓̅̎Ȓ̷̦͙̱͂̒O̶͙̩͙̿͑̈́P̵̨̪͉͂́͘_̸̭̣͉͗͋͠D̶̡͔͈̾̓͝I̵̡͎͚̍͌̒S̸̱̖̋͒͘ͅÂ̶̙͇̩͋̇B̶̝̫͂̅́͜L̷̯̘̖̽̀̓E̷̯̝̣͒̿̓D̵̮̞͐́͘͜ ")
+        }
+    }
+
+    async function updateTelemetry() {
+        try {
+            const controller = new AbortController();
+            setTimeout(() => controller.abort(), 800)
+            const response = await fetch("/telemetry", { signal: controller.signal });
+            const data = await response.json();
+                        
+            if (data.motor_status == 1) {
+                document.getElementById("status").textContent = "🚗 Drive";
+            } else {
+                document.getElementById("status").textContent = "🅿️ Parked";
+            }
+            
+            connectionStatus.textContent = "✅ Connected";
+            connectionStatus.style.color = "rgb(88, 214, 142)";
+            connectionStatus.style.borderColor = "rgb(88, 214, 142)";
+        } catch (error) {
+            connectionStatus.textContent = "❌ Disconnected";
+            connectionStatus.style.color = "rgb(252, 98, 139)";
+            connectionStatus.style.borderColor = "rgb(252, 98, 139)";
+        }
+    }
+    setInterval(updateTelemetry, 1000);
+</script>
+</body>
+</html>
