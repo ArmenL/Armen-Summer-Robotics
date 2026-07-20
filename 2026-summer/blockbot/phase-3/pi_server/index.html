@@ -178,6 +178,8 @@ Keyboard and Mouse Controls:
         P = park
     </pre>
 <script>
+    document.body.focus()
+    const estop = document.getElementById("estop")
     const thumb = document.getElementById("joystick-thumb")
     const zone = document.getElementById("joystick-zone")
     const connectionStatus = document.getElementById("connection-status")
@@ -220,26 +222,31 @@ Keyboard and Mouse Controls:
         isdragging = false;
         thumb.style.transform = "translate(0, 0)";
         thumb.style.boxShadow = ""; 
+        translateSend(0, 0);
     });
 
     document.addEventListener("keydown", function(e) {
         if (e.key == "ArrowUp") {
-            drive()
+            drive();
         } else if (e.key == "ArrowDown") {
-            park()
-        } else if (e.key == "E") {
-            executeOrder66()
+            park();
+        } else if (e.key == "e") {
+            executeOrder66();
         }
     })
 
     document.addEventListener("mousedown", function(e) {
         if (e.button == 1) {
-            executeOrder66()
+            executeOrder66();
         } else if (e.button == 4) {
-            drive()
+            drive();
         } else if (e.button == 3) {
-            park()
+            park();
         }
+    })
+
+    estop.addEventListener("mousedown", function(e) {
+        executeOrder66();
     })
 
     let width = 100
@@ -307,7 +314,7 @@ Keyboard and Mouse Controls:
                         
             if (data.motor_status == 1) {
                 document.getElementById("status").textContent = "🚗 Drive";
-            } else {
+            } else if (data.motor_status == 0) {
                 document.getElementById("status").textContent = "🅿️ Parked";
             }
             
