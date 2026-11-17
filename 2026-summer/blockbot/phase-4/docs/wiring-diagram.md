@@ -15,3 +15,9 @@
 |Both Motors|SLP|GP10|
 |Back ToF Sensor|SDA|GP18(I2C1)|
 ||SCL|GP19(I2C1)|
+||GPIO1|GP20|
+|Left Encoder|A|GP21|
+||B|GP22|
+|Spare|Nothing|GP26|
+|Right Encoder|A|GP27|
+||B|GP28|
