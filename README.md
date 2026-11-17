@@ -74,12 +74,11 @@ Pi and Pico talk over USB serial using newline-delimited JSON messages.
 |---|---|---|---|
 | 0 | Lab setup: printer, Pi, Pico, repo, Onshape | — | ✅ Done |
 | 1 | First I/O: OLED + keypad + Pi serial loop | 0 | ✅ Done |
-| 2 | CAD coupons + dashboard skeleton | 1–2 | ⬜ Next |
-| 3 | Manual drive + stop from dashboard | 3 | ⬜ |
-| 4 | Sensors + telemetry: encoders, ToF, bump | 4 | ⬜ |
+| 2 | CAD coupons + dashboard skeleton | 1–2 | ✅ Done |
+| 3 | Manual drive + stop from dashboard | 3 | ✅ Done |
+| 4 | Sensors + telemetry: encoders, ToF, bump | 4 | ⬜ Next |
 | 5 | First autonomy: one scripted behavior | 5 | ⬜ |
 | 6 ← CORE | Arena + printed pieces + one full mission | 6 | ⬜ |
-| — | Overnight camp week (hard zero) | — | ⬜ |
 | 7 | Reliability check: 20-trial log | — | ⬜ |
 | 8–9 | Stretch: camera stream → detect → orient | 7–9 | ⬜ |
 | 10 | Final demo + full documentation | 10 | ⬜ |
